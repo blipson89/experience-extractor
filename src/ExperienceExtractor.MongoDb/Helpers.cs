@@ -82,8 +82,8 @@ namespace ExperienceExtractor.MongoDb
                 {                    
                     using (doc)
                     {
-                        return (T)serializer.Deserialize(new BsonBinaryReader(new BsonBuffer(doc.Slice, false), binaryReaderSettings),
-                            typeof(T), null);
+	                    var bsonBinaryReader = new BsonBinaryReader(new ByteBufferStream(doc.Slice, false), binaryReaderSettings);
+	                    return (T)serializer.Deserialize(BsonDeserializationContext.CreateRoot(bsonBinaryReader));
                     }
                 });   
         }

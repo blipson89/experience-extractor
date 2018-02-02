@@ -70,9 +70,9 @@ namespace ExperienceExtractor.Api.Parsing
             return typeFactories;
         }
 
-        public ParseFactories InitializeFromAttributes(Assembly assembly)
+        public ParseFactories InitializeFromAttributes(params Assembly[] assemblies)
         {
-
+			foreach (var assembly in assemblies)
             foreach (var type in assembly.GetAllTypes())
             {
                 foreach (var factoryAttr in
@@ -121,7 +121,9 @@ namespace ExperienceExtractor.Api.Parsing
                     {
                         if (_defaultInstance == null)
                         {
-                            _defaultInstance = new ParseFactories().InitializeFromAttributes(typeof(ParseFactories).Assembly);
+	                        var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+		                        .Where(a => a.FullName.StartsWith("ExperienceExtractor")).ToArray();
+							_defaultInstance = new ParseFactories().InitializeFromAttributes(assemblies);
                         }
                     }
                 }
